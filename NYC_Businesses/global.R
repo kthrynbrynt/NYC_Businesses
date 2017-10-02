@@ -8,7 +8,7 @@ library(maps)
 
 
 #Data
-DCA = fread('/Users/kathrynbryant/nycdsa/ShinyProject/DCA.csv')
+DCA = fread('/Users/kathrynbryant/nycdsa/ShinyApp/DCA.csv')
 
 #NOTE: > View(DCA) results in the following error, although the data
 #frame functions normally otherwise:
@@ -72,9 +72,6 @@ industries = levels(DCA$Category)
 
 NY = map('state', fill = FALSE, plot = TRUE, 
          region = "new york")
-
-
-
 
 
 

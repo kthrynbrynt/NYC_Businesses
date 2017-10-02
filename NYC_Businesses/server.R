@@ -19,16 +19,22 @@ library()
 
 shinyServer(function(input, output, session) {
    output$map = renderLeaflet({
-      leaflet(DCA) %>% 
+      leaflet() %>% 
       addProviderTiles('Esri.WorldStreetMap') %>%
       setView(-73.968285, 40.785091, 12) 
    })
    
-    observeEvent(input$checked, {
-      DCA_updated = DCA %>% filter(Category %in% input$checked)
-      proxy <- leafletProxy("map", data = DCA_updated)
-      proxy %>% addMarkers(~Longitude, ~Latitude)
-   }, ignoreInit = TRUE)
+   values = reactiveValues()
+   values$checked = c()
    
+    observeEvent(input$checked, {
+      to_add = setdiff(input$checked, intersect(values$checked, input$checked))
+      DCA_add = DCA %>% filter(Category %in% to_add)
+      leafletProxy("map", data = DCA_add) %>% 
+         addMarkers(~Longitude, ~Latitude)
+      values$checked = input$checked
+   }) 
+    
+    
 })
 

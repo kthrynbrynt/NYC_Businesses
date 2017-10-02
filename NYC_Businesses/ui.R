@@ -17,6 +17,7 @@ library(shinydashboard)
 shinyUI(dashboardPage(
    dashboardHeader(title = "NYC Businesses"),
    dashboardSidebar(
+      
       sidebarUserPanel('Kathryn Bryant',
                        image = "https://yt3.ggpht.com/-04uuTMHfDz4/AAAAAAAAAAI/AAAAAAAAAAA/Kjeupp-eNNg/s100-c-k-no-rj-c0xffffff/photo.jpg"),
       sidebarMenu(
