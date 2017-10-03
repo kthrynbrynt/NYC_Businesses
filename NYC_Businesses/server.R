@@ -29,10 +29,14 @@ shinyServer(function(input, output, session) {
    
     observeEvent(input$checked, {
       to_add = setdiff(input$checked, intersect(values$checked, input$checked))
+      to_remove = setdiff(input$checked, values$checked)
+      values$checked = input$checked
       DCA_add = DCA %>% filter(Category %in% to_add)
+      DCA_remove = DCA %>% filter(Category %in% to_remove)
       leafletProxy("map", data = DCA_add) %>% 
          addMarkers(~Longitude, ~Latitude)
-      values$checked = input$checked
+      leafletProxy("map", data = DCA_remove) %>% 
+         removeMarkerFromCluster(~Longitude, ~Latitude)
    }) 
     
     
