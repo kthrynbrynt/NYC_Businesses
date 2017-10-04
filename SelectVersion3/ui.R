@@ -22,8 +22,7 @@ shinyUI(dashboardPage(
                        image = "https://yt3.ggpht.com/-04uuTMHfDz4/AAAAAAAAAAI/AAAAAAAAAAA/Kjeupp-eNNg/s100-c-k-no-rj-c0xffffff/photo.jpg"),
       sidebarMenu(
          menuItem("Map", tabName = 'map', icon = icon('globe')),
-         menuItem("Borough Comparisons", tabName = 'boroughs', icon = icon('bar-chart')),
-         menuItem("Documentation", tabName = "Documentation", icon = icon('book')),
+         #menuItem("Borough Comparisons", tabName = 'boroughs', icon = icon('bar-chart')),
          menuItem('Business Data', tabName = 'data1', icon = icon('table'))
         # menuItem('Income Data', tabName = 'data2', icon = icon('table'))
       ),
@@ -33,15 +32,9 @@ shinyUI(dashboardPage(
    ),
    dashboardBody(
       tabItems(
-         tabItem(tabName = 'map', fluidRow(infoBoxOutput("total"),
-                                           infoBoxOutput("typePercent")),
-                 fluidRow(box(leafletOutput('map'), width = 12)),
-                 fluidRow(box(htmlOutput("describe"), width = 12))),
-         tabItem(tabName = 'boroughs', fluidRow(box(plotOutput('boroughs'), 
-                                                    width = 12))),
-         #tabItem(tabName = "Documentation", 
-          #       tags$iframe(style="height:400px; width:100%; scrolling=yes", 
-           #       src="/Users/kathrynbryant/NYCDSA/ShinyApp/DCA_Documentation.pdf")),
+         tabItem(tabName = 'map', fluidRow(box(leafletOutput('map'), width = 12)),
+                 fluidRow(box(plotOutput('boroughs')), width = 12)),
+         #tabItem(tabName = 'boroughs', plotOutput('boroughs')),
          tabItem(tabName = 'data1', 'business data goes here')
          #tabItem(tabName = 'data2', 'income data goes here')
       )

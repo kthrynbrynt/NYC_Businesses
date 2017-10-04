@@ -29,30 +29,9 @@ shinyServer(function(input, output, session) {
       DCA_add = DCA %>% filter(Industry %in% input$selected)
       leafletProxy("map", data = DCA_add) %>%
          clearMarkers() %>%
-         addMarkers(~Longitude, ~Latitude, popup = ~Detail, 
-                    icon = icon('handshake-o')) #icons don't change :(
+         addMarkers(~Longitude, ~Latitude, markerOptions(clickable = TRUE),
+                       icon = icon(DCA_add$Icon[1])) #icons don't change :(
    }) 
-    
-    
-    #InfoBoxes won't scale horizontally :(
-    output$total = renderInfoBox({
-       DCA_total = DCA %>% filter(Industry %in% input$selected) %>%
-          summarise(Total = n())
-       infoBox('Total in Operation', DCA_total$Total, 
-                icon = icon('calculator'), fill = TRUE, width = 6,
-               color = 'blue')
-       
-    }) #cat('Total', input$selected, 'Businesses')
-    
-    output$typePercent = renderInfoBox({
-       DCA_type = DCA %>% group_by(Industry) %>%
-          summarise(Percent.Individual = sum(License.Type == 'Individual')/n())
-       infoBox('Percent Individually Owned', 
-                DCA_type$Percent.Individual, 
-                icon = icon('calculator'), fill = TRUE, width = 6, 
-               color = 'blue')
-       
-    }) #cat('Percent', input$selected, 'Individually Owned')
     
     
     output$boroughs = renderPlot({
