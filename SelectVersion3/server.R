@@ -29,8 +29,8 @@ shinyServer(function(input, output, session) {
       DCA_add = DCA %>% filter(Industry %in% input$selected)
       leafletProxy("map", data = DCA_add) %>%
          clearMarkers() %>%
-         addMarkers(~Longitude, ~Latitude, markerOptions(clickable = TRUE),
-                       icon = icon(DCA_add$Icon[1])) #icons don't change :(
+         addMarkers(~Longitude, ~Latitude, popup = ~Detail,
+                    label = ~Name) 
    }) 
     
     
@@ -39,10 +39,32 @@ shinyServer(function(input, output, session) {
           group_by(Borough)
    ggplot(data = DCA_grouped, aes(x = Borough)) +
           geom_bar(aes(fill = Borough)) + ylab("Number of Businesses") +
+      scale_x_discrete(drop = FALSE) +
       theme_economist() + scale_fill_economist() +
       ggtitle('Number of Businesses by Borough')
           
     }) #option?: use fill = Postcode or License.Type instead
+    
+        #InfoBoxes won't scale horizontally :(
+    output$total = renderInfoBox({
+       DCA_total = DCA %>% filter(Industry %in% input$selected) %>%
+          summarise(Total = n())
+       infoBox('Total in Operation:', DCA_total$Total, 
+                icon = icon('calculator'), fill = FALSE, width = 6,
+               color = 'blue')
+       
+    }) #cat('Total', input$selected, 'Businesses')
+    
+    output$describe = renderInfoBox({
+       Single_description = DCA_Describe %>% 
+          filter(Industry %in% input$selected)
+       infoBox(paste(c(input$selected, 'licensing details:'), collapse = ' '),
+               Single_description$Descriptions,
+               icon = icon('vcard-o'), fill = FALSE, width = 12,
+               color = 'blue')
+    })
+    
+   
     
     
 })

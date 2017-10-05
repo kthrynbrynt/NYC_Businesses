@@ -17,11 +17,13 @@ library(ggthemes)
 
 
 
+
+
 shinyServer(function(input, output, session) {
    output$map = renderLeaflet({
       leaflet() %>% 
-      addProviderTiles('Esri.WorldStreetMap') %>%
-      setView(-73.968285, 40.785091, 10) 
+      addProviderTiles('OpenStreetMap.Mapnik') %>%
+      setView(-73.95383, 40.72923, 10) 
    })
    
    
@@ -29,30 +31,34 @@ shinyServer(function(input, output, session) {
       DCA_add = DCA %>% filter(Industry %in% input$selected)
       leafletProxy("map", data = DCA_add) %>%
          clearMarkers() %>%
-         addMarkers(~Longitude, ~Latitude, popup = ~Detail, 
-                    icon = icon('handshake-o')) #icons don't change :(
-   }) 
+          addMarkers(~Longitude, ~Latitude, popup = ~Detail,
+                     label = ~Name)
+   }) #addAwesomeMarkers(~Longitude, ~Latitude, popup = ~Detail, 
+      #              label = ~Name, icon =  awesomeIcons(icon = 'dollar',
+      #                                                 iconColor = 'black',
+      #                                                  markerColor = 'blue',
+      #                                                  library = 'fa'))
     
     
-    #InfoBoxes won't scale horizontally :(
+    
+    
     output$total = renderInfoBox({
        DCA_total = DCA %>% filter(Industry %in% input$selected) %>%
           summarise(Total = n())
-       infoBox('Total in Operation', DCA_total$Total, 
+       infoBox('Total in NYC:', DCA_total$Total, 
                 icon = icon('calculator'), fill = TRUE, width = 6,
                color = 'blue')
        
     }) #cat('Total', input$selected, 'Businesses')
     
-    output$typePercent = renderInfoBox({
-       DCA_type = DCA %>% group_by(Industry) %>%
-          summarise(Percent.Individual = sum(License.Type == 'Individual')/n())
-       infoBox('Percent Individually Owned', 
-                DCA_type$Percent.Individual, 
-                icon = icon('calculator'), fill = TRUE, width = 6, 
+    output$describe = renderInfoBox({
+       Single_description = DCA_Describe %>% 
+          filter(Industry %in% input$selected)
+       infoBox(paste(c(input$selected, 'licensing details:'), collapse = ' '),
+               Single_description$Descriptions,
+               icon = icon('vcard-o'), fill = FALSE, width = 12,
                color = 'blue')
-       
-    }) #cat('Percent', input$selected, 'Individually Owned')
+    })
     
     
     output$boroughs = renderPlot({
@@ -64,6 +70,7 @@ shinyServer(function(input, output, session) {
       ggtitle('Number of Businesses by Borough')
           
     }) #option?: use fill = Postcode or License.Type instead
+   
     
     
 })

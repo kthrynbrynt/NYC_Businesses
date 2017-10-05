@@ -32,8 +32,10 @@ shinyUI(dashboardPage(
    ),
    dashboardBody(
       tabItems(
-         tabItem(tabName = 'map', fluidRow(box(leafletOutput('map'), width = 12)),
-                 fluidRow(box(plotOutput('boroughs')), width = 12)),
+         tabItem(tabName = 'map', fluidRow(box(htmlOutput("describe"), width = 12)),
+                  fluidRow(box(leafletOutput('map'), width = 6), 
+                           box(plotOutput('boroughs'), width = 6)),
+                  fluidRow(infoBoxOutput("total", width = 5))),
          #tabItem(tabName = 'boroughs', plotOutput('boroughs')),
          tabItem(tabName = 'data1', 'business data goes here')
          #tabItem(tabName = 'data2', 'income data goes here')

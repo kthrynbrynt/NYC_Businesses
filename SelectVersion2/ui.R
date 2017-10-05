@@ -15,11 +15,11 @@ library(DT)
 library(shinydashboard)
 
 shinyUI(dashboardPage(
-   dashboardHeader(title = "NYC Businesses"),
-   dashboardSidebar(
-      
-      sidebarUserPanel('Kathryn Bryant',
-                       image = "https://yt3.ggpht.com/-04uuTMHfDz4/AAAAAAAAAAI/AAAAAAAAAAA/Kjeupp-eNNg/s100-c-k-no-rj-c0xffffff/photo.jpg"),
+    dashboardHeader(title = "NYC Businesses"),
+    dashboardSidebar(
+        
+        sidebarUserPanel("Kathryn Bryant",
+                         image = "https://yt3.ggpht.com/-04uuTMHfDz4/AAAAAAAAAAI/AAAAAAAAAAA/Kjeupp-eNNg/s100-c-k-no-rj-c0xffffff/photo.jpg"),
       sidebarMenu(
          menuItem("Map", tabName = 'map', icon = icon('globe')),
          menuItem("Borough Comparisons", tabName = 'boroughs', icon = icon('bar-chart')),
@@ -33,11 +33,10 @@ shinyUI(dashboardPage(
    ),
    dashboardBody(
       tabItems(
-         tabItem(tabName = 'map', fluidRow(infoBoxOutput("total"),
-                                           infoBoxOutput("typePercent")),
-                 fluidRow(box(leafletOutput('map'), width = 12)),
-                 fluidRow(box(htmlOutput("describe"), width = 12))),
-         tabItem(tabName = 'boroughs', fluidRow(box(plotOutput('boroughs'), 
+         tabItem(tabName = 'map', fluidRow(box(htmlOutput("describe"), width = 12)),
+                 fluidRow(box(leafletOutput('map'), width = 12))),
+         tabItem(tabName = 'boroughs', fluidRow(infoBoxOutput("total", width = 5)),
+                 fluidRow(box(plotOutput('boroughs'), 
                                                     width = 12))),
          #tabItem(tabName = "Documentation", 
           #       tags$iframe(style="height:400px; width:100%; scrolling=yes", 
