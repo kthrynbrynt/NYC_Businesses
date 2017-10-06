@@ -41,7 +41,9 @@ shinyServer(function(input, output, session) {
           geom_bar(aes(fill = Borough)) + ylab("Number of Businesses") +
       scale_x_discrete(drop = FALSE) +
       theme_economist() + scale_fill_economist() +
-      ggtitle('Number of Businesses by Borough')
+      ggtitle(paste(c('Number of', input$selected, 'Businesses by Borough'), 
+                    collapse = ' ')) +
+      theme(legend.position = 'none')
           
     }) #option?: use fill = Postcode or License.Type instead
     
@@ -49,11 +51,31 @@ shinyServer(function(input, output, session) {
     output$total = renderInfoBox({
        DCA_total = DCA %>% filter(Industry %in% input$selected) %>%
           summarise(Total = n())
-       infoBox('Total in Operation:', DCA_total$Total, 
-                icon = icon('calculator'), fill = FALSE, width = 6,
-               color = 'blue')
+       infoBox('Total in NYC', DCA_total$Total, 
+                icon = icon('calculator'), fill = TRUE, width = 6,
+               color = 'navy')
        
     }) #cat('Total', input$selected, 'Businesses')
+    
+   output$zipcode = renderInfoBox({
+       DCA_zip_total = DCA %>% filter(Industry %in% input$selected, 
+                                  Postcode == input$zipcode) %>%
+          summarise(Total = n())
+       infoBox(paste(c('Total in', as.character(input$zipcode)), collapse = ' '), 
+               DCA_zip_total$Total, icon = icon('envelope-o'), 
+               fill = TRUE, width = 6, color = 'blue')
+       
+    })
+   
+   output$neigh = renderInfoBox({
+       DCA_neighborhood = DCA %>% filter(Industry %in% input$selected, 
+                                  NTA == input$neighborhood) %>%
+          summarise(Total = n())
+       infoBox(paste(c('Total in', as.character(input$neighborhood)), collapse = ' '), 
+               DCA_neighborhood$Total, icon = icon('envelope-o'), 
+               fill = TRUE, width = 6, color = 'teal')
+       
+    })
     
     output$describe = renderInfoBox({
        Single_description = DCA_Describe %>% 
@@ -61,14 +83,25 @@ shinyServer(function(input, output, session) {
        infoBox(paste(c(input$selected, 'licensing details:'), collapse = ' '),
                Single_description$Descriptions,
                icon = icon('vcard-o'), fill = FALSE, width = 12,
-               color = 'blue')
+               color = 'navy')
     })
+    
+    
+#    output$comparisons = renderPlot({
+#       pie_data = DCA %>% filter(Postcode == input$zipcode) %>%
+#         group_by(Industry) %>% mutate(Count = n())
+       
+#       ggplot(pie_data, aes(x = '', y = Count, fill = Industry)) +
+#          geom_bar(width = 1, stat = 'identity') + coord_polar('y') +
+#          theme_economist(horizontal = FALSE) + ggtitle(paste(c('Licenses in', input$zipcode), 
+#                                            collapse = ' ')) +
+#          theme(legend.position = 'bottom') + xlab('') + ylab('')})
     
     output$table = DT::renderDataTable({
        DCA_Clean = DCA %>% select(Name, License.Type, Industry, Postcode,
                         Longitude, Latitude, Borough)
-       datatable(DCA, rownames = FALSE) 
-    })
+       datatable(DCA, rownames = FALSE, options = list(scrollX = TRUE)) 
+  })
     
    
 

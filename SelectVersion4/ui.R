@@ -15,29 +15,37 @@ library(DT)
 library(shinydashboard)
 
 shinyUI(dashboardPage(
+   skin = 'black',
    dashboardHeader(title = "NYC Businesses"),
    dashboardSidebar(
       
       sidebarUserPanel('Kathryn Bryant',
                        image = "https://yt3.ggpht.com/-04uuTMHfDz4/AAAAAAAAAAI/AAAAAAAAAAA/Kjeupp-eNNg/s100-c-k-no-rj-c0xffffff/photo.jpg"),
       sidebarMenu(
-         menuItem("Map", tabName = 'map', icon = icon('globe')),
-         #menuItem("Borough Comparisons", tabName = 'boroughs', icon = icon('bar-chart')),
-         menuItem('Business Data', tabName = 'data', icon = icon('table'))
+         menuItem("Business License Exploration", tabName = 'map', icon = icon('globe')),
+         #menuItem("License Comparisons", tabName = 'comparisons', icon = icon('pie-chart')),
+         menuItem('Data', tabName = 'data', icon = icon('table'))
         # menuItem('Income Data', tabName = 'data2', icon = icon('table'))
       ),
-      selectInput('selected', 'Industry to View', industries, 
-                         selected = NULL)
-      #checkboxInput('typecheck', 'Show Business Type', types)
+      selectInput('selected', 'License Category to View', industries, 
+                         selected = NULL),
+      numericInput('zipcode', 'Zip Code of Interest', value = 10007),
+      selectInput('neighborhood', 'Neighborhood of Interest', 
+                  neighborhoods, selected = 'Airport')
    ),
    dashboardBody(
       tabItems(
          tabItem(tabName = 'map', fluidRow(box(htmlOutput("describe"), width = 12)),
                   fluidRow(box(leafletOutput('map'), width = 6), 
                            box(plotOutput('boroughs'), width = 6)),
-                  fluidRow(infoBoxOutput("total", width = 5))),
-         #tabItem(tabName = 'boroughs', plotOutput('boroughs')),
-         tabItem(tabName = 'data', fluidRow(box(DT::dataTableOutput('table'))))
+                  fluidRow(infoBoxOutput('zipcode', width = 6),
+                           infoBoxOutput('neigh', width = 6)),
+                 fluidRow(box(width = 3),
+                          infoBoxOutput('total', width = 6))),
+         #tabItem(tabName = 'comparisons', fluidRow(plotOutput('comparisons'), 
+          #                                         width = 12)),
+         tabItem(tabName = 'data', fluidRow(box(DT::dataTableOutput('table'), 
+                                                width = 12)))
          #tabItem(tabName = 'data2', 'income data goes here')
       )
    )

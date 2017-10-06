@@ -55,6 +55,7 @@ DCA$State = as.factor(DCA$State)
 DCA$Postcode = as.factor(DCA$Postcode)
 DCA$Council.District = as.factor(DCA$Council.District)
 DCA$Postcode = as.factor(DCA$Postcode)
+DCA$NTA = as.factor(DCA$NTA)
 
 
 #Note: Contact.Phone includes some values with dashes and some without. If used,
@@ -152,7 +153,9 @@ DCA = DCA %>% mutate(Industry = gsub(pattern = "Amusement Arcade",
 DCA$Industry = as.factor(DCA$Industry)
 
 industries = levels(DCA$Industry)
+neighborhoods = levels(DCA$NTA)
 types = levels(DCA$License.Type)
+zips = levels(DCA$Postcode)
 
 DCA = DCA %>% mutate(Icon = Industry)
 DCA$Icon = as.factor(DCA$Icon)
@@ -166,7 +169,7 @@ levels(DCA$Icon) = c("game-pad", "bullhorn", "square", "car", "eye", "cutlery",
 DCA$Icon = as.character(DCA$Icon)
                      
 Industry = levels(DCA$Industry)
-Descriptions = c('An Amusement Arcade License is required for any business that will have ten or more amusement devices located on its premises.',
+Descriptions = c('An Amusement Arcade License is required for any business that will have ten or more amusement devices located on its premises. Amusement devices must have different licenses depending on whether they are Temporary, Permanent, and/or Portable.',
 'Any business that owns or rents a space where a public auction occurs must have an Auction House (Premises) license. Only licensed Auctioneers may act as an Auctioneer at the Auction House.',                  
 'A Bingo Game Operator License is required for any non-profit organization that will operate bingo games. Please note that for-profit entities are not eligible to apply for the Bingo Game Operator License. Bingo games are those in which designated numbers or symbols on a card are matched with numbers or symbols selected at random, and prizes are awarded accordingly.',	
 'A business must have a Booting Company License to place wheel locks on vehicles. Wheel locks, also known as boots, are used to enforce parking rules for private parking lots or streets by preventing illegally parked vehicles from being moved until a charge is paid.',
@@ -202,6 +205,9 @@ Descriptions = c('An Amusement Arcade License is required for any business that 
 'A Tow Truck Company License is required for a business that tows vehicles for profit within the five boroughs of New York City.')
 
 DCA_Describe = data.frame(Industry, Descriptions)
+
+
+ZIP = read.csv('/Users/kathrynbryant/NYCDSA/ShinyApp/zip_stats.csv')
 
 #zip_starts = 10:50
 
