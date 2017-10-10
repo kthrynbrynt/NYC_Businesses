@@ -30,43 +30,76 @@ shinyServer(function(input, output, session) {
    })
    
    
-    observeEvent(input$selected, {
-      DCA_add = DCA %>% filter(Industry %in% input$selected)
-      leafletProxy("map", data = DCA_add) %>%
-         clearMarkers() %>%
-         addAwesomeMarkers(~Longitude, ~Latitude, 
-                    popup = paste("Neighborhood:", DCA_add$NTA, "<br>",
-                                  "Zipcode:", DCA_add$Postcode, "<br>",
-                                  "", DCA_add$Detail),
-                    label = ~Name, icon = icons) 
+   observeEvent({
+      input$compare
+      input$selected
+      input$first
+      input$second
+      }, {
+      if (input$compare == "Single License") {
+         DCA_add = DCA %>% filter(Industry %in% input$selected)
+         leafletProxy("map", data = DCA_add) %>%
+            clearMarkers() %>%
+            addAwesomeMarkers(~Longitude, ~Latitude, 
+                       popup = paste("Neighborhood:", DCA_add$NTA, "<br>",
+                                     "Zipcode:", DCA_add$Postcode, "<br>",
+                                     "", DCA_add$Detail),
+                       label = ~Name, icon = icons) 
+      } else {
+         DCA_first = DCA %>% filter(Industry == input$first)
+         DCA_second = DCA %>% filter(Industry == input$second)
+         leafletProxy("map") %>%
+             clearMarkers() %>%
+            addAwesomeMarkers(DCA_first$Longitude, DCA_first$Latitude,
+                    popup = paste("Neighborhood:", DCA_first$NTA, "<br>",
+                                 "Zipcode:", DCA_first$Postcode, "<br>",
+                                  "", DCA_first$Detail),
+                    label = DCA_first$Name, icon = icons, group = 'first') %>%
+            addAwesomeMarkers(DCA_second$Longitude, DCA_second$Latitude,
+                    popup = paste("Neighborhood:", DCA_second$NTA, "<br>",
+                                  "Zipcode:", DCA_second$Postcode, "<br>",
+                                  "", DCA_second$Detail),
+                    label = DCA_second$Name, icon = icons_added, group = 'second')
+      }
    })
+   
+   #  observeEvent(input$selected, {
+   #    DCA_add = DCA %>% filter(Industry %in% input$selected)
+   #    leafletProxy("map", data = DCA_add) %>%
+   #       clearMarkers() %>%
+   #       addAwesomeMarkers(~Longitude, ~Latitude,
+   #                  popup = paste("Neighborhood:", DCA_add$NTA, "<br>",
+   #                                "Zipcode:", DCA_add$Postcode, "<br>",
+   #                                "", DCA_add$Detail),
+   #                  label = ~Name, icon = icons)
+   # })
 
     
-#    observeEvent(input$compare, {
-#       leafletProxy("map", data = DCA) %>%
-#          clearMarkers()
+   #  observeEvent(input$compare, {
+   #     leafletProxy("map", data = DCA) %>%
+   #        clearMarkers()
+   #  })
+# 
+#    observeEvent(input$first, {
+#       DCA_first = DCA %>% filter(Industry == input$first)
+#       leafletProxy("map", data = DCA_first) %>%
+#          clearMarkers() %>%
+#          addAwesomeMarkers(~Longitude, ~Latitude,
+#                     popup = paste("Neighborhood:", DCA_first$NTA, "<br>",
+#                                  "Zipcode:", DCA_first$Postcode, "<br>",
+#                                   "", DCA_first$Detail),
+#                     label = ~Name, icon = icons)
+#     })
+# 
+#     observeEvent(input$second, {
+#       DCA_second = DCA %>% filter(Industry == input$second)
+#       leafletProxy("map", data = DCA_second) %>%
+#          addAwesomeMarkers(~Longitude, ~Latitude,
+#                     popup = paste("Neighborhood:", DCA_second$NTA, "<br>",
+#                                   "Zipcode:", DCA_second$Postcode, "<br>",
+#                                   "", DCA_second$Detail),
+#                     label = ~Name, icon = icons_added)
 #    })
-    
-#   observeEvent(input$first, {
-#      DCA_first = DCA %>% filter(Category == input$first)
-#      leafletProxy("map", data = DCA_first) %>%
-#         clearMarkers() %>%
-#         addAwesomeMarkers(~Longitude, ~Latitude, 
-#                    popup = paste("Neighborhood:", DCA_first$NTA, "<br>",
-#                                 "Zipcode:", DCA_first$Postcode, "<br>",
-#                                  "", DCA_first$Detail),
-#                    label = ~Name, icon = icons)
-#    })
-    
-#    observeEvent(input$second, {
-#      DCA_second = DCA %>% filter(Category == input$second)
-#      leafletProxy("map", data = DCA_second) %>% 
-#         addAwesomeMarkers(~Longitude, ~Latitude, 
-#                    popup = paste("Neighborhood:", DCA_second$NTA, "<br>",
-#                                  "Zipcode:", DCA_second$Postcode, "<br>",
-#                                  "", DCA_second$Detail),
-#                    label = ~Name, icon = icons_added)
-#   })
     
 
     
