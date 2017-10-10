@@ -63,62 +63,6 @@ shinyServer(function(input, output, session) {
       }
    })
    
-   #  observeEvent(input$selected, {
-   #    DCA_add = DCA %>% filter(Industry %in% input$selected)
-   #    leafletProxy("map", data = DCA_add) %>%
-   #       clearMarkers() %>%
-   #       addAwesomeMarkers(~Longitude, ~Latitude,
-   #                  popup = paste("Neighborhood:", DCA_add$NTA, "<br>",
-   #                                "Zipcode:", DCA_add$Postcode, "<br>",
-   #                                "", DCA_add$Detail),
-   #                  label = ~Name, icon = icons)
-   # })
-
-    
-   #  observeEvent(input$compare, {
-   #     leafletProxy("map", data = DCA) %>%
-   #        clearMarkers()
-   #  })
-# 
-#    observeEvent(input$first, {
-#       DCA_first = DCA %>% filter(Industry == input$first)
-#       leafletProxy("map", data = DCA_first) %>%
-#          clearMarkers() %>%
-#          addAwesomeMarkers(~Longitude, ~Latitude,
-#                     popup = paste("Neighborhood:", DCA_first$NTA, "<br>",
-#                                  "Zipcode:", DCA_first$Postcode, "<br>",
-#                                   "", DCA_first$Detail),
-#                     label = ~Name, icon = icons)
-#     })
-# 
-#     observeEvent(input$second, {
-#       DCA_second = DCA %>% filter(Industry == input$second)
-#       leafletProxy("map", data = DCA_second) %>%
-#          addAwesomeMarkers(~Longitude, ~Latitude,
-#                     popup = paste("Neighborhood:", DCA_second$NTA, "<br>",
-#                                   "Zipcode:", DCA_second$Postcode, "<br>",
-#                                   "", DCA_second$Detail),
-#                     label = ~Name, icon = icons_added)
-#    })
-    
-
-    
-
-### This chunk doesn't react as I want it to. I want to simply remove the
-  # markers from the existing map in the selected neighborhood and replace
-  # them with differently colored ones.
-   eventReactive(input$neighborhood, {
-      DCA_nbhd_color = DCA %>% filter(Industry == input$selected, 
-                                      NTA == input$neighborhood)
-      leafletProxy("map", data = DCA_nbhd_color) %>%
-         clearMarkers() %>%
-         addAwesomeMarkers(~Longitude, ~Latitude, 
-                    popup = paste("Neighborhood:", DCA_nbhd_color$NTA, "<br>",
-                                  "Zipcode:", DCA_add$Postcode, "<br>",
-                                  "", DCA_nbhd_color$Detail),
-                    label = ~Name, icon = icons_added) 
-   })
-    
     
     output$boroughs = renderPlot({
        DCA_grouped = DCA %>% filter(Industry == input$selected) %>%
@@ -144,6 +88,24 @@ shinyServer(function(input, output, session) {
        
     }) 
     
+   output$total1 = renderInfoBox({
+       DCA_total = DCA %>% filter(Industry %in% input$first) %>%
+          summarise(Total = n())
+       infoBox(h4('Total', input$selected, 'licenses in NYC'), DCA_total$Total, 
+                icon = icon('calculator'), fill = TRUE, width = 6,
+               color = 'teal')
+       
+    })
+      
+   output$total2 = renderInfoBox({
+       DCA_total = DCA %>% filter(Industry %in% input$second) %>%
+          summarise(Total = n())
+       infoBox(h4('Total', input$second, 'licenses in NYC'), DCA_total$Total, 
+                icon = icon('calculator'), fill = TRUE, width = 6,
+               color = 'blue')
+       
+    })
+    
 
    output$neigh = renderInfoBox({
        DCA_neighborhood = DCA %>% filter(Industry %in% input$selected, 
@@ -155,6 +117,26 @@ shinyServer(function(input, output, session) {
        
     })
    
+   output$neigh1 = renderInfoBox({
+       DCA_neighborhood = DCA %>% filter(Industry %in% input$first, 
+                                  NTA == input$neighborhood) %>%
+          summarise(Total = n())
+       infoBox(h4(paste(c('Total', input$first, 'licenses in', as.character(input$neighborhood)), collapse = ' ')), 
+               DCA_neighborhood$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'teal')
+       
+    })
+
+   output$neigh2 = renderInfoBox({
+       DCA_neighborhood = DCA %>% filter(Industry %in% input$second, 
+                                  NTA == input$neighborhood) %>%
+          summarise(Total = n())
+       infoBox(h4(paste(c('Total', input$second, 'licenses in', as.character(input$neighborhood)), collapse = ' ')), 
+               DCA_neighborhood$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'blue')
+       
+    })
+   
    
    output$zipcode = renderInfoBox({
        DCA_zip_total = DCA %>% filter(Industry == input$selected, 
@@ -163,6 +145,26 @@ shinyServer(function(input, output, session) {
        infoBox(h4(paste(c('Total', input$selected, 'licenses in', as.character(input$zipcode)), collapse = ' ')), 
                DCA_zip_total$Total, icon = icon('calculator'), 
                fill = TRUE, width = 6, color = 'teal')
+       
+    })
+
+   output$zipcode1 = renderInfoBox({
+       DCA_zip_total = DCA %>% filter(Industry == input$first, 
+                                  Postcode == input$zipcode) %>%
+          summarise(Total = n())
+       infoBox(h4(paste(c('Total', input$first, 'licenses in', as.character(input$zipcode)), collapse = ' ')), 
+               DCA_zip_total$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'teal')
+       
+    })
+
+   output$zipcode2 = renderInfoBox({
+       DCA_zip_total = DCA %>% filter(Industry == input$second, 
+                                  Postcode == input$zipcode) %>%
+          summarise(Total = n())
+       infoBox(h4(paste(c('Total', input$second, 'licenses in', as.character(input$zipcode)), collapse = ' ')), 
+               DCA_zip_total$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'blue')
        
     })
    
