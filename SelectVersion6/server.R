@@ -36,10 +36,39 @@ shinyServer(function(input, output, session) {
          clearMarkers() %>%
          addAwesomeMarkers(~Longitude, ~Latitude, 
                     popup = paste("Neighborhood:", DCA_add$NTA, "<br>",
-                                  "Zipcode", DCA_add$Postcode, "<br>",
+                                  "Zipcode:", DCA_add$Postcode, "<br>",
                                   "", DCA_add$Detail),
                     label = ~Name, icon = icons) 
    })
+
+    
+#    observeEvent(input$compare, {
+#       leafletProxy("map", data = DCA) %>%
+#          clearMarkers()
+#    })
+    
+#   observeEvent(input$first, {
+#      DCA_first = DCA %>% filter(Category == input$first)
+#      leafletProxy("map", data = DCA_first) %>%
+#         clearMarkers() %>%
+#         addAwesomeMarkers(~Longitude, ~Latitude, 
+#                    popup = paste("Neighborhood:", DCA_first$NTA, "<br>",
+#                                 "Zipcode:", DCA_first$Postcode, "<br>",
+#                                  "", DCA_first$Detail),
+#                    label = ~Name, icon = icons)
+#    })
+    
+#    observeEvent(input$second, {
+#      DCA_second = DCA %>% filter(Category == input$second)
+#      leafletProxy("map", data = DCA_second) %>% 
+#         addAwesomeMarkers(~Longitude, ~Latitude, 
+#                    popup = paste("Neighborhood:", DCA_second$NTA, "<br>",
+#                                  "Zipcode:", DCA_second$Postcode, "<br>",
+#                                  "", DCA_second$Detail),
+#                    label = ~Name, icon = icons_added)
+#   })
+    
+
     
 
 ### This chunk doesn't react as I want it to. I want to simply remove the
@@ -52,7 +81,7 @@ shinyServer(function(input, output, session) {
          clearMarkers() %>%
          addAwesomeMarkers(~Longitude, ~Latitude, 
                     popup = paste("Neighborhood:", DCA_nbhd_color$NTA, "<br>",
-                                  "Zipcode", DCA_add$Postcode, "<br>",
+                                  "Zipcode:", DCA_add$Postcode, "<br>",
                                   "", DCA_nbhd_color$Detail),
                     label = ~Name, icon = icons_added) 
    })
@@ -76,7 +105,7 @@ shinyServer(function(input, output, session) {
     output$total = renderInfoBox({
        DCA_total = DCA %>% filter(Industry %in% input$selected) %>%
           summarise(Total = n())
-       infoBox(h4('Total in NYC'), DCA_total$Total, 
+       infoBox(h4('Total', input$selected, 'licenses in NYC'), DCA_total$Total, 
                 icon = icon('calculator'), fill = TRUE, width = 6,
                color = 'teal')
        
@@ -87,33 +116,74 @@ shinyServer(function(input, output, session) {
        DCA_neighborhood = DCA %>% filter(Industry %in% input$selected, 
                                   NTA == input$neighborhood) %>%
           summarise(Total = n())
-       infoBox(h4(paste(c('Total in', as.character(input$neighborhood)), collapse = ' ')), 
-               DCA_neighborhood$Total, icon = icon('envelope-o'), 
-               fill = TRUE, width = 6, color = 'blue')
+       infoBox(h4(paste(c('Total', input$selected, 'licenses in', as.character(input$neighborhood)), collapse = ' ')), 
+               DCA_neighborhood$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'teal')
        
     })
    
    
    output$zipcode = renderInfoBox({
-       DCA_zip_total = DCA %>% filter(Industry %in% input$selected, 
+       DCA_zip_total = DCA %>% filter(Industry == input$selected, 
                                   Postcode == input$zipcode) %>%
           summarise(Total = n())
-       infoBox(paste(c('Total in', as.character(input$zipcode)), collapse = ' '), 
-               DCA_zip_total$Total, icon = icon('envelope-o'), 
-               fill = TRUE, width = 6, color = 'blue')
+       infoBox(h4(paste(c('Total', input$selected, 'licenses in', as.character(input$zipcode)), collapse = ' ')), 
+               DCA_zip_total$Total, icon = icon('calculator'), 
+               fill = TRUE, width = 6, color = 'teal')
        
     })
+   
+   
+   output$neighnames = renderInfoBox({
+      DCA_neigh_names = DCA %>% filter(Industry == input$selected, 
+                                  NTA == input$neighborhood) %>%
+                           select(Name)
+      unique_neigh_names = unique.data.frame(DCA_neigh_names)
+      infoBox(h4(paste(c(input$selected, "businesses in", input$neighborhood), collapse = ' ')),
+              paste(unique_neigh_names$Name, collapse = '; '), 
+              icon = icon('handshake-o'), fill = TRUE, width = 12,
+              color = 'blue')
+   })
+   
+   
+   output$zipcodenames = renderInfoBox({
+      DCA_zip_names = DCA %>% filter(Industry == input$selected, 
+                                  Postcode == input$zipcode) %>%
+                           select(Name)
+      unique_zip_names = unique.data.frame(DCA_zip_names)
+      infoBox(h4(paste(c(input$selected, 'businesses in', input$neighborhood), collapse = ' ')),
+              paste(unique_zip_names$Name, collapse = '; '), 
+              icon = icon('handshake-o'), fill = TRUE, width = 12,
+              color = 'blue')
+   })
    
 
     output$describe = renderInfoBox({
        Single_description = DCA_Describe %>% 
           filter(Industry %in% input$selected)
-       infoBox(paste(c(input$selected, 'licensing details:'), collapse = ' '),
+       infoBox(h4(paste(c(input$selected, 'licensing details:'), collapse = ' ')),
                Single_description$Descriptions,
                icon = icon('vcard-o'), fill = FALSE, width = 12,
-               color = 'navy')
+               color = 'blue')
     })
     
+    
+    output$businessinfo = renderPrint({
+       DCA_search = DCA %>% select(Name, Industry)
+       indices = grep(paste(c(input$search, '+'), collapse = ''),
+                      DCA_search$Name, ignore.case = TRUE)
+       result = unique.data.frame(DCA_search[indices,])
+      result$Industry = as.character(result$Industry)
+      unique_result = unique(result$Industry)
+      cat(unique_result, sep = '\n')
+   }) #NY Carousel Entertainment
+    
+    
+    output$pdf = renderInfoBox({
+       infoBox(h4('Original data and documentation from NYC Open Data available here:'), 
+               tagList(a("NYC Open Data: Legally Operating Businesses", href = "https://data.cityofnewyork.us/Business/Legally-Operating-Businesses/w7w3-xahh")),
+               fill = FALSE, width = 12, color = 'blue')
+    })
 
     
     output$table = DT::renderDataTable({

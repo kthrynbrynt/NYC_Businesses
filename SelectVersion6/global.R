@@ -13,6 +13,9 @@ library(broom)
 library(httr)
 library(rgdal)
 library(rgeos)
+library(shinydashboard)
+# library(devtools)
+
 
 
 #Data
@@ -213,14 +216,14 @@ DCA_Describe = data.frame(Industry, Descriptions)
 
 icons <- awesomeIcons(
   icon = 'ios-close',
-  iconColor = 'black',
+  iconColor = 'white',
   library = 'ion',
   markerColor = 'blue'
 )
 
 icons_added <- awesomeIcons(
   icon = 'ios-close',
-  iconColor = 'black',
+  iconColor = 'white',
   library = 'ion',
   markerColor = 'orange'
 )
