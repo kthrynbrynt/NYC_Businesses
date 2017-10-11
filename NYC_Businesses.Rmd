@@ -1,0 +1,62 @@
+---
+title: "Shiny App Project: NYC Businesses"
+author: "Kathryn Bryant"
+date: "10/9/2017"
+output: ioslides_presentation
+      
+runtime: shiny
+---
+## Questions and Motivation {.build}
+
+- Where should I start or exand a business?
+
+- Where do businesses with a particular license tend to cluster?
+
+- Does my neighborhood have a surplus or need for a certain type of business?
+
+- What kind of license does a particular business I know about have? What are some similar businesses?
+
+Data source: NYC Open Data
+<https://data.cityofnewyork.us/Business/Legally-Operating-Businesses/w7w3-xahh>
+
+
+## App Features {.build}
+
+- Look up a known business to see what license(s) it has
+
+- Get information on basic licensing requirements for a chosen license 
+
+- Get geolocation data on businesses with licenses of a chosen type
+
+- Get summarizing data on businesses with licenses of a user-chosen type for user-selected neighborhoods and zipcodes
+
+- Compare above data for two licenses 
+
+
+
+
+
+## Findings {.build}
+
+- Zero Newsstands in Washington Heights
+- Zero Cabarets in Washington Heights
+ 
+- Commercial Lessors host Bingo Games & Games of Chance
+   * Get Commercial Lessor license in Manhattan?
+
+- Lots of Tow Truck Companies, few Booting Companies (611 v. 5)
+   * Booting company on Staten Island?
+
+
+
+
+## Feature Wishlist/Future Engineering {.build}
+
+- User can opt to see or to hide neighbhorhood/zipcode shaded on the map
+   * Issue: neighborhood and zipcode shapefiles not included in maps package
+   * Possible solution: use tigris package for shapefile; convert tigris object to maps object
+
+- New tab with demographic summary information for chosen neighborhood/zipcode
+   * Requires another data set
+
+
