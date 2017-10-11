@@ -12,7 +12,7 @@ runtime: shiny
 
 - Where do businesses with a particular license tend to cluster?
 
-- Does my neighborhood have a surplus or need for a certain type of business?
+- Does my neighborhood have a surplus of or need for a certain type of business?
 
 - What kind of license does a particular business I know about have? What are some similar businesses?
 
@@ -38,14 +38,15 @@ Data source: NYC Open Data
 
 ## Findings {.build}
 
-- Zero Newsstands in Washington Heights
-- Zero Cabarets in Washington Heights
- 
-- Commercial Lessors host Bingo Games & Games of Chance
-   * Get Commercial Lessor license in Manhattan?
+- Newsstands and cabarets missing from my neighborhood
 
-- Lots of Tow Truck Companies, few Booting Companies (611 v. 5)
-   * Booting company on Staten Island?
+- Lots of storage happens in the Bronx - opportunity in Brooklyn?
+ 
+- Commercial Lessors host Bingo Games & Games of Chance - opportunity in Manhattan?
+
+- Tow Truck Companies greatly outnumber Booting Companies - opportunity to collaborate?
+
+- Special Sale locations needed in Queens!
 
 
 
@@ -53,10 +54,10 @@ Data source: NYC Open Data
 ## Feature Wishlist/Future Engineering {.build}
 
 - User can opt to see or to hide neighbhorhood/zipcode shaded on the map
-   * Issue: neighborhood and zipcode shapefiles not included in maps package
-   * Possible solution: use tigris package for shapefile; convert tigris object to maps object
 
-- New tab with demographic summary information for chosen neighborhood/zipcode
-   * Requires another data set
+- In 'Single License' view, map markers in chosen neighborhood/zipcode different color
+
+- Incorporate additional data sets with more quantitative variables (ex: demographics, regional commercial rental prices, etc.)
+
 
 

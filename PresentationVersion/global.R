@@ -18,12 +18,10 @@ library(shinydashboard)
 
 
 
-#Data
-DCA = fread('/Users/kathrynbryant/nycdsa/ShinyApp/DCA.csv')
+#Data; note that colClasses argument is included to correct an error
+#message reguarding column 12 being coerced as a character.
+DCA = fread('www/DCA.csv', colClasses = list(character = 12))
 
-#NOTE: > View(DCA) results in the following error, although the data
-#frame functions normally otherwise:
-# Error in if (col_min < col_max) { : missing value where TRUE/FALSE needed
 
 #Rename all columns with spaces in their names. Note that there are two
 #columns that have borough info: Boro and Borough. They seem to agree 
