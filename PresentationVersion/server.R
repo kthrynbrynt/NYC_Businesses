@@ -245,7 +245,7 @@ shinyServer(function(input, output, session) {
     output$pdf = renderInfoBox({
        infoBox(h4('Original data and documentation from NYC Open Data available here:'), 
                tagList(a("NYC Open Data: Legally Operating Businesses", href = "https://data.cityofnewyork.us/Business/Legally-Operating-Businesses/w7w3-xahh")),
-               fill = FALSE, width = 12, color = 'blue')
+               fill = FALSE, width = 12, color = 'light-blue')
     })
 
     
